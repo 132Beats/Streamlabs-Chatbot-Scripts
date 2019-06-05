@@ -30,25 +30,29 @@ def Init():
 			"command": "!dice",
 			"permission": "Everyone",
 			"useCustomCosts" : True,
-			"costs": 1,
+			"costs": 10,
 			"maxcost": 3000,
-			"reward0": 1,
-			"reward1": 2,
-			"reward2": 3,
-			"reward3": 4,
-			"reward4": 5,
-			"reward5": 44,
+			"reward11": 0,
+			"reward12": 2,
+			"reward13": 2,
+			"reward14": 3,
+			"reward15": 3,
+			"reward16": 4,
+			"reward17": 5,
+			"reward18": 10,
 			"useCooldown": True,
 			"useCooldownMessages": True,
-			"cooldown": 1,
-			"onCooldown": "$user, $command is still on cooldown for $cd minutes!",
-			"userCooldown": 300,
-			"onUserCooldown": "$user, $command is still on user cooldown for $cd minutes!",
+			"cooldown": 0,
+			"onCooldown": "$user, $command ist noch auf Cooldown fuer $cd Minuten!",
+			"userCooldown": 120,
+			"onUserCooldown": "$user, $command ist fuer dich immernoch auf Cooldown fuer $cd Minuten!",
 			"prefix": "[Dice] ",
-			"responseNotEnoughPoints": "$user you have only $points $currency to roll the dices.",
-			"responseWon": "$user rolls the dices $dices and wins $reward $currency",
-			"responseLost": "$user rolls the dices $dices and looses $cost $currency",
-			"tooMuchEinsatz": "$user Bruder, so viel Einsatz ist nicht drin"
+			"responseNotEnoughPoints": "$user du hast nur $points $currency.",
+			"responseWon": "$user wuerfelt: $dices Eine $dicesSum, du gewinnst $reward $currency!",
+			"responseLost": "$user wuerfelt: $dices Eine $dicesSum, du verlierst deinen Einsatz und hast nur noch $newpointsafterloss $currency.",
+			"tooMuchEinsatz": "$user Bruder, so viel Einsatz ist nicht drin",
+			"cooldownCheck": "Der Cooldown von $command ist $userCooldown Sekunden.",
+			"infomessage": "Bei $command wuerfelt mal 3 Wuerfel, je hoeher die Augenzahlen, desto mehr Gewinn!"
 		}
 
 def Execute(data):
@@ -60,16 +64,21 @@ def Execute(data):
 		points = Parent.GetPoints(userId)
 
 		if settings["useCustomCosts"] and (data.GetParamCount() == 2):
-			try: 
+			try:
 				costs = int(data.GetParam(1))
 			except:
 				if data.GetParam(1) == 'all': 
 					costs = points
-				else :
+				else:
 					costs = settings["costs"] 
 		else:
 			costs = settings["costs"]
-		if costs > settings["maxcost"]:
+
+		if data.GetParam(1) == 'cooldown':
+			outputMessage += settings["cooldownCheck"]
+		elif data.GetParam(1) == 'info':
+			outputMessage += settings["infomessage"]
+		elif costs > settings["maxcost"]:
 			outputMessage += settings["tooMuchEinsatz"]
 		else:
 			if (costs > Parent.GetPoints(userId)) or (costs < 1):
@@ -100,30 +109,72 @@ def Execute(data):
 				if dicesSum < 11:
 					outputMessage += settings["responseLost"]
 					reward = costs
-				elif dicesSum >= 11 and dicesSum <= 13:
-					outputMessage += (settings["responseWon"])
-					reward = costs * settings["reward0"]
-					Parent.AddPoints(userId, username, int(reward))
+				elif dicesSum == 11:
+					if settings["reward11"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward11"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
+				elif dicesSum == 12:
+					if settings["reward12"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward12"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
+				elif dicesSum == 13:
+					if settings["reward13"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward13"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
 				elif dicesSum == 14:
-					outputMessage += (settings["responseWon"])
-					reward = costs * settings["reward1"]
-					Parent.AddPoints(userId, username, int(reward))
+					if settings["reward14"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward14"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
 				elif dicesSum == 15:
-					outputMessage += (settings["responseWon"])
-					reward = costs * settings["reward2"]
-					Parent.AddPoints(userId, username, int(reward))
+					if settings["reward15"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward15"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
 				elif dicesSum == 16:
-					outputMessage += (settings["responseWon"])
-					reward = costs * settings["reward3"]
-					Parent.AddPoints(userId, username, int(reward))
+					if settings["reward16"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward16"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
 				elif dicesSum == 17:
-					outputMessage += (settings["responseWon"])
-					reward = costs * settings["reward4"]
-					Parent.AddPoints(userId, username, int(reward))
+					if settings["reward17"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward17"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
 				elif dicesSum == 18:
-					outputMessage += (settings["responseWon"])
-					reward = costs * settings["reward5"]
-					Parent.AddPoints(userId, username, int(reward))
+					if settings["reward18"] > 0:
+						outputMessage += (settings["responseWon"])
+						reward = costs * settings["reward18"]
+						Parent.AddPoints(userId, username, int(reward))
+					else:
+						outputMessage += settings["responseLost"]
+						reward = costs
+
+
 
 				outputMessage = outputMessage.replace("$dice1", str(dice1))
 				outputMessage = outputMessage.replace("$dice2", str(dice2))
@@ -135,10 +186,12 @@ def Execute(data):
 				if settings["useCooldown"]:
 					Parent.AddUserCooldown(ScriptName, settings["command"], userId, settings["userCooldown"])
 					Parent.AddCooldown(ScriptName, settings["command"], settings["cooldown"])
-
+		
 		outputMessage = outputMessage.replace("$cost", str(costs))
+		outputMessage = outputMessage.replace("$userCooldown", str(settings["userCooldown"]))
 		outputMessage = outputMessage.replace("$user", username)
 		outputMessage = outputMessage.replace("$points", str(points))
+		outputMessage = outputMessage.replace("$newpointsafterloss", str(points-costs))
 		outputMessage = outputMessage.replace("$currency", Parent.GetCurrencyName())
 		outputMessage = outputMessage.replace("$command", settings["command"])
 

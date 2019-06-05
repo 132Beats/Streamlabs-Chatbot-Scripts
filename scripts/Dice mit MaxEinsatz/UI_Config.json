@@ -44,44 +44,58 @@
         "tooltip": "Set the maximum cost for this command.",
         "group": "Currency"
     },
-    "reward0": {
+    "reward11": {
         "type": "numberbox",
-        "value": 1,
-        "label": "Winning multiplier (11-13)",
-        "tooltip": "Set the winning multiplier for getting 11-13",
+        "value": 0,
+        "label": "Winning multiplier (11)",
+        "tooltip": "Set the winning multiplier for getting 11",
         "group": "Currency"
     },
-    "reward1": {
+    "reward12": {
         "type": "numberbox",
         "value": 2,
+        "label": "Winning multiplier (12)",
+        "tooltip": "Set the winning multiplier for getting 12",
+        "group": "Currency"
+    },
+    "reward13": {
+        "type": "numberbox",
+        "value": 2,
+        "label": "Winning multiplier (13)",
+        "tooltip": "Set the winning multiplier for getting 13",
+        "group": "Currency"
+    },
+    "reward14": {
+        "type": "numberbox",
+        "value": 3,
         "label": "Winning multiplier (14)",
         "tooltip": "Set the winning multiplier for getting 14",
         "group": "Currency"
     },
-    "reward2": {
+    "reward15": {
         "type": "numberbox",
         "value": 3,
         "label": "Winning multiplier (15)",
         "tooltip": "Set the winning multiplier for getting 15",
         "group": "Currency"
     },
-    "reward3": {
+    "reward16": {
         "type": "numberbox",
         "value": 4,
         "label": "Winning multiplier (16)",
         "tooltip": "Set the winning multiplier for getting 16",
         "group": "Currency"
     },
-    "reward4": {
+    "reward17": {
         "type": "numberbox",
         "value": 5,
         "label": "Winning multiplier (17)",
         "tooltip": "Set the winning multiplier for getting 17",
         "group": "Currency"
     },
-    "reward5": {
+    "reward18": {
         "type": "numberbox",
-        "value": 44,
+        "value": 10,
         "label": "Winning multiplier (18)",
         "tooltip": "Set the winning multiplier for getting 18",
         "group": "Currency"
@@ -103,13 +117,13 @@
     "cooldown": {
         "type": "numberbox",
         "label": "Cooldown (seconds)",
-        "value": 1,
+        "value": 0,
         "tooltip": "Cooldown in seconds.",
         "group": "Cooldown"
     },
     "onCooldown": {
         "type": "textbox",
-        "value": "$user, $command is still on cooldown for $cd minutes!",
+        "value": "$user, $command ist noch auf Cooldown für $cd Minuten!",
         "label": "Cooldown Response",
         "tooltip": "The message that the bot will display when the command is on cooldown. \r\n $user = Username \r\n $cd = Time remaining \r\n $command = Command name",
         "group": "Cooldown"
@@ -123,7 +137,7 @@
     },
     "onUserCooldown": {
         "type": "textbox",
-        "value": "$user, $command is still on user cooldown for $cd minutes!",
+        "value": "$user, $command ist für dich immernoch auf Cooldown für $cd Minuten!",
         "label": "User Cooldown Response",
         "tooltip": "The message that the bot will display when the command is on user cooldown. \r\n $user = Username \r\n $cd = Time remaining \r\n $command = Command name",
         "group": "Cooldown"
@@ -137,21 +151,21 @@
     },
     "responseNotEnoughPoints": {
         "type": "textbox",
-        "value": "$user you have only $points $currency to roll the dices.",
+        "value": "$user du hast nur $points $currency.",
         "label": "Not enough points",
         "tooltip": "Message that will be posted if the user doesn't have enough points.\r\n $user = Username\r\n $points = Current user points\r\n $currency = Name of currency\r\n $cost = Cost to play",
         "group": "Response Messages"
     },
     "responseWon": {
         "type": "textbox",
-        "value": "$user rolls the dices $dices and wins $reward $currency",
+        "value": "$user würfelt: $dices Eine $dicesSum, du gewinnst $reward $currency!",
         "label": "User wins message",
         "tooltip": "Message that will be posted if the user wins.\r\n $user = Username\r\n $points = Current user points\r\n $currency = Name of currency\r\n $reward = Winning reward\r\n $cost = Cost to play \r\n $dices = Three dices \r\n $dicesSum = The sum of the three dices \r\n $dice1 = First dice number \r\n $dice2 = Second dice number \r\n $dice3 = Third dice number",
         "group": "Response Messages"
     },
     "responseLost": {
         "type": "textbox",
-        "value": "$user rolls the dices $dices and looses $cost $currency",
+        "value": "$user würfelt: $dices Eine $dicesSum, du verlierst deinen Einsatz und hast nur noch $newpointsafterloss $currency.",
         "label": "User looses message",
         "tooltip": "Message that will be posted if the user loose.\r\n $user = Username\r\n $points = Current user points\r\n $currency = Name of Currency\r\n $cost = Cost to play \r\n $dices = Three dices \r\n $dicesSum = The sum of the three dices \r\n $dice1 = First dice number \r\n $dice2 = Second dice number \r\n $dice3 = Third dice number",
         "group": "Response Messages"
@@ -161,6 +175,20 @@
         "value": "$user Bruder, so viel Einsatz ist nicht drin",
         "label": "Nachricht bei zu hohem Einsatz",
         "tooltip": "Message that will be posted if the user loose.\r\n $user = Username\r\n $points = Current user points\r\n $currency = Name of Currency\r\n $cost = Cost to play \r\n $dices = Three dices \r\n $dicesSum = The sum of the three dices \r\n $dice1 = First dice number \r\n $dice2 = Second dice number \r\n $dice3 = Third dice number",
+        "group": "Response Messages"
+    },
+    "cooldownCheck": {
+        "type": "textbox",
+        "value": "Der Cooldown von $command ist $userCooldown Sekunden.",
+        "label": "Cooldown-Info",
+        "tooltip": "Message that will be posted if someone uses $command cooldown",
+        "group": "Cooldown"
+    },
+    "infomessage": {
+        "type": "textbox",
+        "value": "Bei $command würfelt mal 3 Würfel, je höher die Augenzahlen, desto mehr Gewinn!",
+        "label": "Info-Nachricht bei $command info",
+        "tooltip": "Info-Nachricht bei $command info",
         "group": "Response Messages"
     },
     "openReadMe": {
