@@ -68,7 +68,7 @@
   "cooldown": {
     "type": "numberbox",
     "label": "Cooldown (seconds)",
-    "value": 60,
+    "value": 120,
     "tooltip": "Cooldown in seconds.",
     "group": "Cooldown"
   },
