@@ -44,8 +44,20 @@ def Init():
 		}
 
 def Execute(data):
-	if data.IsChatMessage() and data.GetParam(0).lower() == settings["command"] and Parent.HasPermission(data.User, settings["permission"], "") and ((settings["liveOnly"] and Parent.IsLive()) or (not settings["liveOnly"])):
+	if data.IsChatMessage() and data.GetParam(0).lower() == settings["command"] and ((settings["liveOnly"] and Parent.IsLive()) or (not settings["liveOnly"])):
 		outputMessage = ""
+		if data.GetParamCount() == 2:
+			if data.GetParam(1) == 'info':
+				outputMessage = settings["infomessage"]
+			elif data.GetParam(1) == 'cooldown':
+				outputMessage = settings["cooldowninfo"]
+		elif data.GetParamCount() > 3:
+			outputMessage = settings["tooManyArguments"]
+		else:
+			if !Parent.HasPermission(data.User, settings["permission"], ""):
+				outputMessage = settings["noPermission"]
+			else:
+				#WIP
 		userId = data.User			
 		username = data.UserName
 		points = Parent.GetPoints(userId)
