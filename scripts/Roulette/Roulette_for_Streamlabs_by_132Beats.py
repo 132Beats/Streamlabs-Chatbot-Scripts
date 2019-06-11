@@ -4,6 +4,7 @@ import json
 import os
 import ctypes
 import codecs
+import sqlite3
 
 ScriptName = "Roulette Minigame"
 Website = "https://github.com/132Beats"
@@ -42,6 +43,7 @@ def Init():
 			"responseWon": "$user hat richtig gestzt! $won und gewinnt $reward $currency",
 			"responseLost": "$user hat verkackt $lost und verliert seinen Einsatz von $reward $currency n"
 		}
+	droptables()
 
 def Execute(data):
 	if data.IsChatMessage() and data.GetParam(0).lower() == settings["command"] and ((settings["liveOnly"] and Parent.IsLive()) or (not settings["liveOnly"])):
@@ -57,6 +59,7 @@ def Execute(data):
 			if !Parent.HasPermission(data.User, settings["permission"], ""):
 				outputMessage = settings["noPermission"]
 			else:
+				
 				#WIP
 		userId = data.User			
 		username = data.UserName
@@ -119,4 +122,18 @@ def OpenReadMe():
 	return
 
 def Tick():
+	return
+
+def dropTables():
+	connection = sqlite3.connect("dicebets.db")
+	cursor = connection.cursor()
+	cursor.execute("""DROP TABLE IF EXISTS dicebets""")
+	sql_command = """
+	CREATE TABLE dicebets ( 
+	userId CHAR(8) PRIMARY KEY, 
+	target INT, 
+	amount INT);"""
+	cursor.execute(sql_command)
+	connection.commit()
+	connection.close()
 	return
