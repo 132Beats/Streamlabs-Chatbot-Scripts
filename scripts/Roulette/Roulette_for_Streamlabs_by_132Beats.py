@@ -48,18 +48,61 @@ def Init():
 def Execute(data):
 	if data.IsChatMessage() and data.GetParam(0).lower() == settings["command"] and ((settings["liveOnly"] and Parent.IsLive()) or (not settings["liveOnly"])):
 		outputMessage = ""
-		if data.GetParamCount() == 2:
+		if data.GetParamCount() <= 2:
 			if data.GetParam(1) == 'info':
 				outputMessage = settings["infomessage"]
 			elif data.GetParam(1) == 'cooldown':
 				outputMessage = settings["cooldowninfo"]
+			else:
+				outputMessage = settings["infomessage"]
 		elif data.GetParamCount() > 3:
 			outputMessage = settings["tooManyArguments"]
 		else:
 			if !Parent.HasPermission(data.User, settings["permission"], ""):
 				outputMessage = settings["noPermission"]
 			else:
-				
+				if Parent.IsOnCooldown(ScriptName, settings["command"]):
+					cdi = Parent.GetCooldownDuration(ScriptName, settings["command"])
+					cd = str(cdi / 60) + ":" + str(cdi % 60).zfill(2) 
+					outputMessage = settings["onCooldown"]
+				else:
+					if data.GetParam(1) != settings["black"] and data.GetParam(1) != settings["red"] and data.GetParam(1) != settings["zero"]:
+						outputMessage = settings["cannotIdentifyColor"]
+					else:
+						points = Parent.GetPoints(userId)
+						if data.GetParam(2) == "all":
+							costs = points
+							numberidentified = true
+						elif data.GetParam(2) == "max":
+							costs = settings["maxEntry"]
+							numberidentified = true
+						else:
+							try:
+								costs = int(data.GetParam(2))
+								if costs == 0:
+									outputMessage = settings["cannotIdentifyNumberOfEntry"]
+									numberidentified = false
+								else:
+									numberidentified = true
+							except:
+								outputMessage = settings["cannotIdentifyNumberOfEntry"]
+								numberidentified = false
+
+						if numberidentified:
+							if costs > points:
+								outputMessage = settings["responseNotEnoughPoints"]
+							elif costs > settings["maxEntry"]
+								outputMessage = settings["tooMuchEntry"]
+							else:
+								connection = sqlite3.connect("dicebets.db")
+								cursor = connection.cursor()
+								sql_command = """INSERT INTO dicebets;"""
+									cursor.execute(sql_command)
+									connection.commit()
+									connection.close()
+								Parent.RemovePoints(userId, username, costs)
+
+
 
 
 
@@ -69,7 +112,6 @@ def Execute(data):
 				#WIP
 		userId = data.User			
 		username = data.UserName
-		points = Parent.GetPoints(userId)
 
 		if settings["useCustomCosts"] and (data.GetParamCount() == 3):
 			try: 
@@ -136,9 +178,11 @@ def dropTables():
 	cursor.execute("""DROP TABLE IF EXISTS dicebets""")
 	sql_command = """
 	CREATE TABLE dicebets ( 
-	userId CHAR(8) PRIMARY KEY, 
+	id INT NOT NULL AUTO_INCREMENT,
+	userId CHAR(32),
 	target INT, 
-	amount INT);"""
+	amount INT,
+	PRIMARY KEY (id) );"""
 	cursor.execute(sql_command)
 	connection.commit()
 	connection.close()
