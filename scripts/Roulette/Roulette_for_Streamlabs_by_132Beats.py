@@ -48,6 +48,9 @@ def Init():
 def Execute(data):
 	if data.IsChatMessage() and data.GetParam(0).lower() == settings["command"] and ((settings["liveOnly"] and Parent.IsLive()) or (not settings["liveOnly"])):
 		outputMessage = ""
+		userId = data.User			
+		username = data.UserName
+		points = Parent.GetPoints(userId)
 		if data.GetParamCount() <= 2:
 			if data.GetParam(1) == 'info':
 				outputMessage = settings["infomessage"]
@@ -69,7 +72,6 @@ def Execute(data):
 					if data.GetParam(1) != settings["black"] and data.GetParam(1) != settings["red"] and data.GetParam(1) != settings["zero"]:
 						outputMessage = settings["cannotIdentifyColor"]
 					else:
-						points = Parent.GetPoints(userId)
 						if data.GetParam(2) == "all":
 							costs = points
 							numberidentified = true
@@ -96,10 +98,11 @@ def Execute(data):
 							else:
 								connection = sqlite3.connect("dicebets.db")
 								cursor = connection.cursor()
-								sql_command = """INSERT INTO dicebets;"""
-									cursor.execute(sql_command)
-									connection.commit()
-									connection.close()
+								sql_command = """INSERT INTO dicebets(dbuserId,target,amount) VALUES (puser,ptarget,pamount);"""
+								sql_command = sql_command.format(puser=userId,ptarget=data.GetParam(1),pamount=data.GetParam(2))
+								cursor.execute(sql_command)
+								connection.commit()
+								connection.close()
 								Parent.RemovePoints(userId, username, costs)
 
 
@@ -179,7 +182,7 @@ def dropTables():
 	sql_command = """
 	CREATE TABLE dicebets ( 
 	id INT NOT NULL AUTO_INCREMENT,
-	userId CHAR(32),
+	dbuserId CHAR(32),
 	target INT, 
 	amount INT,
 	PRIMARY KEY (id) );"""
