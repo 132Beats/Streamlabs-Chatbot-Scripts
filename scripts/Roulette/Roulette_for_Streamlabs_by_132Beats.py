@@ -96,47 +96,19 @@ def Execute(data):
 							elif costs > settings["maxEntry"]
 								outputMessage = settings["tooMuchEntry"]
 							else:
+								dbtuple = (userId,data.GetParam(1),data.GetParam(2))
 								connection = sqlite3.connect("dicebets.db")
 								cursor = connection.cursor()
-								sql_command = """INSERT INTO dicebets(dbuserId,target,amount) VALUES (puser,ptarget,pamount);"""
-								sql_command = sql_command.format(puser=userId,ptarget=data.GetParam(1),pamount=data.GetParam(2))
-								cursor.execute(sql_command)
+								cursor.execute("""INSERT INTO dicebets(userId,target,amount) VALUES (?,?,?);""",dbtuple)
 								connection.commit()
 								connection.close()
 								Parent.RemovePoints(userId, username, costs)
+								if !Parent.IsOnUserCooldown(ScriptName, settings["command"],"__roulettebot__"): #?
+									Parent.AddUserCooldown(ScriptName, settings["command"],"__roulettebot__", settings["rollTimer"])
+									outputMessage = settings["rollStart"]
+								else:
+									outputMessage = settings["duringRoll"]
 
-
-
-
-
-
-
-				
-				#WIP
-		userId = data.User			
-		username = data.UserName
-
-		if settings["useCustomCosts"] and (data.GetParamCount() == 3):
-			try: 
-				costs = int(data.GetParam(2))
-			except:
-				if data.GetParam(2) == 'all': 
-					costs = points
-
-		if (costs > Parent.GetPoints(userId)) or (costs < 1):
-			outputMessage = settings["responseNotEnoughPoints"]
-		elif settings["useCooldown"] and (Parent.IsOnCooldown(ScriptName, settings["command"])):
-			if settings["useCooldownMessages"]:
-				cdi = Parent.GetCooldownDuration(ScriptName, settings["command"])
-				cd = str(cdi / 60) + ":" + str(cdi % 60).zfill(2) 
-				outputMessage = settings["onCooldown"]
-			else:
-				outputMessage = ""
-		else:
-			Parent.RemovePoints(userId, username, costs)
-
-			coin = Parent.GetRandom(0, 15)
-			reward = ""
 
 			if coin == 0:
 				outputMessage = (settings["responseWon"])
@@ -180,12 +152,10 @@ def dropTables():
 	cursor = connection.cursor()
 	cursor.execute("""DROP TABLE IF EXISTS dicebets""")
 	sql_command = """
-	CREATE TABLE dicebets ( 
-	id INT NOT NULL AUTO_INCREMENT,
-	dbuserId CHAR(32),
+	CREATE TABLE dicebets (
+	userId CHAR(32),
 	target INT, 
-	amount INT,
-	PRIMARY KEY (id) );"""
+	amount INT);"""
 	cursor.execute(sql_command)
 	connection.commit()
 	connection.close()
