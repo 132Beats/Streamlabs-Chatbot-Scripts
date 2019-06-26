@@ -15,6 +15,8 @@ Version = "0.9.0"
 configFile = "config.json"
 settings = {}
 
+roll = false
+
 def ScriptToggled(state):
 	return
 
@@ -105,6 +107,7 @@ def Execute(data):
 								Parent.RemovePoints(userId, username, costs)
 								if !Parent.IsOnUserCooldown(ScriptName, settings["command"],"__roulettebot__"): #?
 									Parent.AddUserCooldown(ScriptName, settings["command"],"__roulettebot__", settings["rollTimer"])
+									roll = true
 									outputMessage = settings["rollStart"]
 								else:
 									outputMessage = settings["duringRoll"]
@@ -145,6 +148,10 @@ def OpenReadMe():
 	return
 
 def Tick():
+	if !Parent.IsOnUserCooldown(ScriptName, settings["command"],"__roulettebot__"): #?
+		if roll:
+			roll = false
+			#wip
 	return
 
 def dropTables():
