@@ -151,6 +151,14 @@ def Tick():
 	if !Parent.IsOnUserCooldown(ScriptName, settings["command"],"__roulettebot__"): #?
 		if roll:
 			roll = false
+			rollResult = Parent.GetRandom(0, 15)
+			if rollResult == 0:
+				#Null wins
+			elif rollResult < 8:
+				#Red wins
+			else:
+				#Black wins
+			 
 			#wip
 	return
 
